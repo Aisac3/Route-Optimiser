@@ -60,6 +60,7 @@ wheels/
 .idea/
 *.swp
 *.swo
+*.graphml
 
 # =========================
 # Database
