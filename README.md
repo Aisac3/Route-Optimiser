@@ -1,162 +1,200 @@
-# 🚀 Road Network Based Multi-Stop Route Optimization System
+# 🚀 SmartRoute -- Intelligent Route Optimization System
 
-A full-stack route optimization system that computes near-optimal routes across multiple stops (20–50) using real OpenStreetMap road network data and heuristic graph algorithms.
+SmartRoute is a full-stack route optimization platform that computes the
+most efficient travel path between multiple stops using real-world road
+network data.
 
----
+The system leverages graph theory, shortest-path algorithms, and
+Traveling Salesman Problem (TSP) optimization techniques to generate
+optimized routes with segment-level distance breakdown and professional
+visualization.
 
-## 📌 Project Overview
+------------------------------------------------------------------------
 
-This project implements a district-level road network routing and multi-destination optimization engine.
+## 📌 Project Highlights
 
-Unlike systems that rely on paid APIs (e.g., Google Maps), this solution:
+-   🗺 Interactive map-based stop selection\
+-   🔎 Location search with geocoding\
+-   📍 Real road-network routing using OSMnx\
+-   ⚡ TSP-based multi-stop optimization\
+-   📊 Segment-wise distance calculation\
+-   🧭 Advanced timeline route visualization\
+-   🔁 State persistence across pages\
+-   🧹 Smart clear & stop deletion functionality
 
-- Uses OpenStreetMap (OSM) road data
-- Builds a local weighted graph
-- Computes shortest paths using A* algorithm
-- Solves the Traveling Salesman Problem (TSP)
-- Refines solution using 2-Opt heuristic
-- Visualizes optimized route using React + Leaflet
-
----
-
-## 🧠 Core Features
-
-- ✅ Real road-network based routing
-- ✅ A* shortest path computation
-- ✅ Distance matrix generation
-- ✅ Nearest Neighbor TSP
-- ✅ 2-Opt optimization refinement
-- ✅ Full route reconstruction
-- ✅ FastAPI backend
-- ✅ React + Leaflet interactive map
-- ✅ Optimized route visualization
-- ✅ Total distance calculation
-
----
+------------------------------------------------------------------------
 
 ## 🏗️ System Architecture
-User → React Frontend → FastAPI Backend
-↓
-OSM Road Graph
-↓
-A* Shortest Path Engine
-↓
-Distance Matrix
-↓
-TSP (NN + 2-Opt)
-↓
-Full Route Reconstruction
-↓
-Optimized Map Display
 
+``` mermaid
+flowchart TD
+    A[React Frontend - Leaflet Map] --> B[FastAPI Backend]
+    B --> C[Graph Service - OSMnx]
+    C --> D[NetworkX Road Graph]
+    B --> E[TSP Optimization Engine]
+    E --> F[Distance Matrix Builder]
+    F --> G[Nearest Neighbor Algorithm]
+    G --> H[2-Opt Optimization]
+    H --> B
+    B --> A
+```
 
----
+------------------------------------------------------------------------
+
+## 🧠 Algorithms Used
+
+### 🔹 Shortest Path
+
+-   Implemented using `networkx.shortest_path`
+-   Edge weight: road length (meters)
+
+### 🔹 Traveling Salesman Problem (TSP)
+
+1.  Nearest Neighbor (Initial solution)
+2.  2-Opt Optimization (Route refinement)
+
+### 🔹 Distance Matrix
+
+-   Pairwise shortest path distance calculation
+-   Cached for performance optimization
+
+------------------------------------------------------------------------
 
 ## 🛠️ Tech Stack
 
-### Backend
-- Python 3.x
-- FastAPI
-- OSMnx
-- NetworkX
-- NumPy
-- Uvicorn
-
 ### Frontend
-- React
-- Leaflet
-- React-Leaflet
-- Axios
 
-### Data Source
-- OpenStreetMap (OSM)
+-   React (Vite)
+-   React Router
+-   Leaflet.js
+-   Axios
 
----
+### Backend
+
+-   FastAPI
+-   OSMnx
+-   NetworkX
+-   NumPy
+-   Pydantic
+
+### Version Control
+
+-   Git
+-   GitHub
+
+------------------------------------------------------------------------
 
 ## 📂 Project Structure
-route-optimizer/
-│
-├── backend/
-│ ├── app.py
-│ ├── optimizer.py
-│ ├── tsp_nn.py
-│ ├── tsp_2opt.py
-│ ├── ernakulam_drive.graphml
-│
-├── frontend/
-│ ├── src/
-│ └── package.json
-│
-└── README.md
 
+    Route-Optimiser/
+    │
+    ├── frontend/
+    │   ├── src/
+    │   │   ├── components/
+    │   │   ├── pages/
+    │   │   ├── hooks/
+    │   │   └── api/
+    │
+    ├── backend/
+    │   ├── app/
+    │   │   ├── services/
+    │   │   ├── main.py
+    │
+    ├── .gitignore
+    └── README.md
 
----
+------------------------------------------------------------------------
 
-# ⚙️ Setup Instructions
+## 🚀 Installation & Setup
 
----
+### 1️⃣ Clone Repository
 
-## 🔹 1️⃣ Clone Repository
+``` bash
+git clone https://github.com/Arjun-P-Manoj/Route-Optimiser.git
+cd Route-Optimiser
+```
 
-```bash
-git clone <your-repo-link>
-cd route-optimizer
+### 2️⃣ Backend Setup
 
-
-2️⃣ Backend Setup
-Create Virtual Environment
-
-python3 -m venv venv
-source venv/bin/activate
-
-Install Dependencies
-
-pip install osmnx networkx numpy fastapi uvicorn scikit-learn
-
-Run Backend Server
-
+``` bash
 cd backend
-uvicorn app:app --reload
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
 
 Backend runs at:
+
 http://127.0.0.1:8000
 
-Swagger API docs:
-http://127.0.0.1:8000/docs
+### 3️⃣ Frontend Setup
 
-3️⃣ Frontend Setup
-
+``` bash
 cd frontend
 npm install
-npm start
+npm run dev
+```
 
-Frontend runs at:http://localhost:3000
+Frontend runs at:
 
-🧮 Algorithms Used
-1️⃣ A* Shortest Path
+http://localhost:5173
 
-Used to compute real road distances between stops.
+------------------------------------------------------------------------
 
-2️⃣ Distance Matrix
+## 📡 API Endpoint Example
 
-Stores pairwise shortest path distances.
+### POST /optimize-coordinates
 
-3️⃣ Nearest Neighbor (Greedy Heuristic)
+Request:
 
-Generates initial TSP solution.
+``` json
+[
+  {"lat": 10.52, "lng": 76.21},
+  {"lat": 10.54, "lng": 76.23}
+]
+```
 
-Time Complexity: O(n²)
+Response:
 
-4️⃣ 2-Opt Optimization
+``` json
+{
+  "optimized_order": [0, 1],
+  "total_distance_km": 12.45,
+  "segment_distances": [12.45],
+  "route": [...]
+}
+```
 
-Refines route by removing crossing edges.
+------------------------------------------------------------------------
 
-Time Complexity: O(n³)
+## ✨ Key Improvements
 
-📊 Example Output
+-   Global route state management
+-   Real backend-calculated segment distances
+-   Professional timeline UI
+-   Stop deletion support
+-   Large graph file handling with .gitignore
 
-Optimized visiting order
+------------------------------------------------------------------------
 
-Total road distance (meters/km)
+## 📈 Future Enhancements
 
-Blue polyline visualization on map
+-   Estimated travel time calculation
+-   Traffic-aware routing
+-   Cloud deployment (Docker + AWS)
+-   User authentication & saved routes
+
+------------------------------------------------------------------------
+
+## 👨‍💻 Author
+
+**Arjun P Manoj**\
+Final Year B.Tech Computer Science\
+GitHub: https://github.com/Arjun-P-Manoj
+
+------------------------------------------------------------------------
+
+## 📄 License
+
+Developed for academic and research purposes.
